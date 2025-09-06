@@ -1,0 +1,112 @@
+void printchar(char* buf);
+void scanf(char* buffer);
+
+#define MEMORY_SIZE     1024
+#define NULL            ((void*)0)
+
+char memory[MEMORY_SIZE];
+
+typedef struct Block{
+    unsigned long size;
+    int free;
+    struct Block* next;
+} Block;
+
+Block* Heap = (void*)memory;
+
+void init_memory(){
+    Heap=(Block*)memory;
+    Heap->free=1;
+    Heap->size=sizeof(memory)-sizeof(Block);
+    Heap->next=NULL;
+}
+void* malloc(unsigned long size){
+    Block* curr = Heap;
+    while(curr!=NULL){
+        if(curr->free&&curr->size>=size){
+            if(curr->size >= size + sizeof(Block) + 1){
+                Block* new_block = (Block*)((char*)(curr + 1) + size);
+                new_block->size = curr->size - size - sizeof(Block);
+                new_block->free = 1;
+                new_block->next = curr->next;
+                curr->size = size;
+                curr->next = new_block;
+            }
+            curr->free=0;
+            return (void*)(curr+1);
+        }
+        curr=curr->next;
+    }
+    return NULL;
+}
+void free(void* ptr){
+    if(!ptr)return;
+    Block* curr = ((Block*)ptr)-1;
+    curr->free=1;
+}
+void printf(const char* buffer){
+    unsigned int size = 0;
+    while(buffer[size]!='\0')size++;
+    for(unsigned int i=0;i<size;i++){
+        printchar((char*)&buffer[i]);
+    }
+}
+void CharToInt(char *buffer, int *out){
+    int nta;
+    *out=0;
+    unsigned long n = 0;
+    while(buffer[n]!='\0')n++;
+    for(unsigned long i=0;i<n;i++){
+        if(buffer[i]!='-')nta = buffer[i]-'0';
+        else *out=-(*out);
+        *out = (*out * 10) + nta;
+    }
+}
+char* IntToChar(long n){
+    int negative=0;
+    if(n<0){
+        negative=1;
+        n=-n;
+    }
+    char* buffer = (char*)malloc(64*sizeof(char));
+    if(buffer==NULL)return NULL;
+    long digit = n;
+    int divisor = 1;
+    while(digit>=10){
+        digit/=10;
+        divisor*=10;
+    }
+    int i=1;
+    if(negative)buffer[0]='-';
+    else i=0;
+    while(divisor>0){
+        int newdigit=n/divisor;
+        buffer[i]=(char)newdigit+48;
+        n%=divisor;
+        divisor/=10;
+        i++;
+    }
+    buffer[i]='\0';
+    return buffer;
+}
+unsigned long strlen(const char* str){
+    unsigned long i=0;
+    while(str[i]!='\0')i++;
+    return i;
+}
+char* concatstr(char** str, const char* app){
+    unsigned long str_len = strlen((*str));
+    unsigned long app_len = strlen(app);
+
+    char* out = (char*)malloc(((str_len+app_len)+1)*sizeof(char));
+    
+    unsigned long i=0;
+    /*BUGFIX*/
+    for(unsigned long y=0;y<str_len;++)out[i]=(*str)[i];
+    for(unsigned long y=0;y<app_len;i++)out[i]=app[i];
+    out[i+1]='\0';
+
+    *str=out;
+
+    return out;
+}
