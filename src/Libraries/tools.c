@@ -1,3 +1,5 @@
+typedef unsigned long long size_t;
+
 void printchar(char* buf);
 void scanf(char* buffer);
 
@@ -94,19 +96,6 @@ unsigned long strlen(const char* str){
     while(str[i]!='\0')i++;
     return i;
 }
-char* concatstr(char** str, const char* app){
-    unsigned long str_len = strlen((*str));
-    unsigned long app_len = strlen(app);
-
-    char* out = (char*)malloc(((str_len+app_len)+1)*sizeof(char));
-    
-    unsigned long i=0;
-    /*BUGFIX*/
-    for(unsigned long y=0;y<str_len;++)out[i]=(*str)[i];
-    for(unsigned long y=0;y<app_len;i++)out[i]=app[i];
-    out[i+1]='\0';
-
-    *str=out;
-
-    return out;
+void memcpy(void* ptr, void* to, size_t size){
+    for(size_t i=0;i)
 }

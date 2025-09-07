@@ -8,6 +8,7 @@ int main(){
     scanf(as);
 
     printf(concatstr(&as, "aasd\n"));
+    
 
     return 0;
 }
