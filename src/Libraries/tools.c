@@ -106,17 +106,41 @@ void* memcpy(void* ptr, void** to, size_t size){
 
     return to;
 }
-void* realloc(void* ptr, size_t size){
-    Block* curr = Heap;
 
-    char* b = (char*)malloc(size);
-
-    while(curr!=NULL){
-        if(curr==ptr){
-            memcpy(curr, (void**)b, curr->size);
-        }
-        curr=curr->next;
+void* realloc(void* ptr, size_t size) {
+    if (ptr == NULL) {
+        return malloc(size);
+    }
+    if (size == 0) {
+        free(ptr);
+        return NULL;
     }
 
-    return b;
+    Block* curr = ((Block*)ptr) - 1;
+
+    if (curr->size >= size) {
+        return ptr;
+    }
+
+    if (curr->next && curr->next->free &&
+        curr->size + sizeof(Block) + curr->next->size >= size) {
+        
+        curr->size += sizeof(Block) + curr->next->size;
+        curr->next = curr->next->next;
+
+        if (curr->size >= size) {
+            return ptr;
+        }
+    }
+
+    void* new_ptr = malloc(size);
+    if (new_ptr == NULL) {
+        return NULL;
+    }
+
+    memcpy(new_ptr, ptr, curr->size);
+
+    free(ptr);
+
+    return new_ptr;
 }
