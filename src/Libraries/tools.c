@@ -96,6 +96,13 @@ unsigned long strlen(const char* str){
     while(str[i]!='\0')i++;
     return i;
 }
-void memcpy(void* ptr, void* to, size_t size){
-    for(size_t i=0;i)
+void* memcpy(void* ptr, void** to, size_t size){
+    unsigned char* a = (unsigned char*)ptr;
+    unsigned char* b = (unsigned char*)*to;
+
+    for(size_t i=0;i<size;i++) {
+        b[i]=a[i];
+    }
+
+    return to;
 }

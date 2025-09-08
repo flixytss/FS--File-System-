@@ -3,12 +3,13 @@
 int main(){
     init_memory();
 
-    char* as;
+    int* block = (int*)malloc(2*sizeof(int));
+    block[0]=54;
+    block[1]=45;
 
-    scanf(as);
+    int* blocka = (int*)malloc(4*sizeof(int));
 
-    printf(concatstr(&as, "aasd\n"));
-    
+    memcpy(block, (void**)&blocka, 3*sizeof(int));
 
     return 0;
 }
