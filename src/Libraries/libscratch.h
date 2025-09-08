@@ -11,3 +11,4 @@ long scanf(char* buffer);
 void CharToInt(char *buffer, int *out);
 unsigned long strlen(const char* str);
 void* memcpy(void* ptr, void** to, size_t size);
+void* realloc(void* ptr, size_t size);

@@ -7,9 +7,18 @@ int main(){
     block[0]=54;
     block[1]=45;
 
-    int* blocka = (int*)malloc(4*sizeof(int));
-
-    memcpy(block, (void**)&blocka, 3*sizeof(int));
+    int* blocka = (int*)realloc(block, 3);
+    printf("Block\n");
+    printf(IntToChar(block[0]));
+    printf("\n");
+    printf(IntToChar(block[1]));
+    printf("\nBlocka\n");
+    printf(IntToChar(blocka[0]));
+    printf("\n");
+    printf(IntToChar(blocka[1]));
+    printf("\n");
+    printf(IntToChar(blocka[2]));
+    printf("\n");
 
     return 0;
 }
