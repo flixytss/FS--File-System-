@@ -3,13 +3,16 @@ typedef unsigned long long size_t;
 void printchar(char* buf);
 void scanf(char* buffer);
 
-#define MEMORY_SIZE     1024
+#define MEMORY_SIZE     2048
 #define NULL            ((void*)0)
+
+#define true            1
+#define false           0
 
 char memory[MEMORY_SIZE];
 
 typedef struct Block{
-    unsigned long size;
+    size_t size;
     int free;
     struct Block* next;
 } Block;
@@ -46,12 +49,13 @@ void free(void* ptr){
     Block* curr = ((Block*)ptr)-1;
     curr->free=1;
 }
-void printf(const char* buffer){
+void printf(const char* buffer, int newline){
     unsigned int size = 0;
     while(buffer[size]!='\0')size++;
     for(unsigned int i=0;i<size;i++){
         printchar((char*)&buffer[i]);
     }
+    if(newline)printchar("\n");
 }
 void CharToInt(char *buffer, int *out){
     int nta;
@@ -143,4 +147,33 @@ void* realloc(void* ptr, size_t size) {
     free(ptr);
 
     return new_ptr;
+}
+
+// Strings
+
+int IsEqual(char* a, char* b){
+    unsigned long a_size = strlen(a);
+    unsigned long b_size = strlen(b);
+
+    if(b_size!=a_size)return false;
+
+    unsigned long accert = 0;
+
+    for(unsigned long i=0;i<a_size;i++){
+        if(a[i]==b[i])accert++;
+        if(accert==a_size)return true;
+    }
+
+    return false;
+}
+void appendchar(char** a, char b){
+    char* group = (char*)realloc((void*)*a ,(strlen(*a)+1)*sizeof(char));
+    group[strlen(*a)]='\0';
+    group[strlen(*a)+1]='\0';
+    (*a)=group;
+}
+void append(char** a, char* b){
+    for(unsigned int i=0;i<strlen(b);i++){
+        //appendchar(a, b[strlen(*a)+i]);
+    }
 }
